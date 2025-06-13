@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Admin Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #fafafa; margin: 40px;}
+        table { border-collapse: collapse; width: 90%; background: #fff;}
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background: #f5e6ff; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        tr:hover { background: #f1f1f1; }
+        caption { margin-bottom: 10px; font-size: 1.2em; font-weight: bold; }
+    </style>
+</head>
+<body>
+<h2>DreamBliss - Order Admin Dashboard</h2>
+<table id="orders-table">
+    <caption>Order List</caption>
+    <tr>
+        <th>Order ID</th>
+        <th>Product Name</th>
+        <th>Quantity</th>
+        <th>Price</th>
+    </tr>
+    <!-- Order rows will be inserted here -->
+</table>
+<script>
+    fetch('http://localhost:8080/orders')
+        .then(response => response.json())
+        .then(data => {
+            const table = document.getElementById('orders-table');
+            data.forEach(order => {
+                if (order.items && order.items.length > 0) {
+                    order.items.forEach((item, idx) => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${idx === 0 ? order.id : ''}</td>
+                            <td>${item.product}</td>
+                            <td>${item.quantity}</td>
+                            <td>${item.price}</td>
+                        `;
+                        table.appendChild(tr);
+                    });
+                } else {
+                    // 没有商品明细的异常情况（通常不会发生）
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${order.id}</td>
+                        <td colspan="3">(No items)</td>
+                    `;
+                    table.appendChild(tr);
+                }
+            });
+        })
+        .catch(error => {
+            alert("Unable to load order data. Please make sure the backend is running!\n" + error);
+        });
+</script>
+</body>
+</html>
