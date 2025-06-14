@@ -26,7 +26,7 @@
     <!-- Order rows will be inserted here -->
 </table>
 <script>
-    fetch('http://localhost:8080/orders')
+    fetch('https://dreambliss-backend.onrender.com/orders')
         .then(response => response.json())
         .then(data => {
             const table = document.getElementById('orders-table');
